@@ -1,3 +1,4 @@
+import DecoratorDP.*;
 import ObservablePackage.ProductStockObservable;
 import ObserverPackage.Customer;
 import PaymentStrategy.CreditCardPayment;
@@ -26,10 +27,36 @@ public class Main {
         if(stock > 0){
             Scanner scanner = new Scanner(System.in);
             CartCheckoutClass checkout = new CartCheckoutClass();
+            Product product = new BaseProduct("Iphone", 50000);
 
             int totalAmount = 1500;
 
             System.out.println("Your total amount: ₹" + totalAmount);
+            System.out.println("Select any additional features for your product");
+            System.out.println("1. Gift Wrap");
+            System.out.println("2. Extended Warranty");
+            System.out.println("3. Express Shipping");
+            System.out.println("4. Checkout, no additional features needed");
+
+            System.out.println("Do you want to add Gift Wrapping? (yes/no)");
+            String giftWrapChoice = scanner.nextLine();
+            if (giftWrapChoice.equalsIgnoreCase("yes")) {
+                product = new GiftWrapDecorator(product);
+            }
+
+            System.out.println("Do you want to add Express Shipping? (yes/no)");
+            String expressShippingChoice = scanner.nextLine();
+            if (expressShippingChoice.equalsIgnoreCase("yes")) {
+                product = new ExpressShippingDecorator(product);
+            }
+
+            System.out.println("Do you want to add Extended Warranty? (yes/no)");
+            String extendedWarrantyChoice = scanner.nextLine();
+            if (extendedWarrantyChoice.equalsIgnoreCase("yes")) {
+                product = new ExtendedWarrantyDecorator(product);
+            }
+            System.out.println("\nThe product to be checked out is " + product.getDescription() + " and price is " + product.cost());
+
             System.out.println("Select a payment method:");
             System.out.println("1. UPI");
             System.out.println("2. Credit Card");
@@ -57,7 +84,7 @@ public class Main {
                     return;
             }
 
-            checkout.payment(totalAmount);
+            checkout.payment(product.cost());
         }
     }
 }
